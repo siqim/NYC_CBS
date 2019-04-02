@@ -7,39 +7,80 @@ Created on Sat Mar 30 20:02:27 2019
 
 
 import pickle
+from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 
 from docplex.mp.model import Model
 
+from b_utils import nested_list_to_tuple
+
 
 with open('../data/data.pickle', 'rb') as f:
     data = pickle.load(f)
 
+num_potential_users = len(data.users_df)
+num_available_buses = 10
+rho = 3 * 1e-3 # ticket price per meter
+gamma = 9 * 1e-3 # operational cost per meter
+phi = 20 # vehicle capacity
 
-def build_Y(data, K):
-    Y = []
-    for i in data.stop_locs.keys():
-        for j in data.stop_locs.keys():
-            if i != j:
-                for t in data.stop_pickup_time_unit[i]:
-                    for s in data.stop_dropoff_time_unit[j]:
-                        time_diff = data.stop_dist_mat[i][j]
-                        if t - s == time_diff:
-                            for k in range(K):
-                                Y.append((i, j, t, s, k))
-    return Y
+beta_0c, beta_1c, beta_2c, beta_3c, beta_4c = 0.969, -0.007, -0.14, -0.241, -0.196
+beta_0t, beta_1t, beta_2t, beta_3t, beta_4t = 0, 0, 0, -0.327, -0.145
 
 
-P = len(data.users_df)
-K = 10
-X = [(p, k) for p in range(P) for k in range(K)]
-Y = build_Y(data, K)
+N = [n for n in range(num_potential_users)]
+M = [m for m in range(num_available_buses)]
+A = deepcopy(data.uniq_feasible_routes)
 
-model = Model(name='CB-Planning')
-x = model.binary_var_dict(X, name='x')
-y = model.binary_var_dict(Y, name='y')
+all_x = [route + [m] for m in M for route in A]
+all_a = [each_feasible_route + [m] + [n] for n, each_users_feasible_routes in enumerate(data.users_df['feasible_routes'])\
+         for each_feasible_route in each_users_feasible_routes for m in M]
 
+
+mdl = Model(name='CB-Planning')
+x = mdl.binary_var_dict(nested_list_to_tuple(all_x), name='x')
+a = mdl.binary_var_dict(nested_list_to_tuple(all_a), name='a')
+
+
+def Len():
+    pass
+def Adj():
+    pass
+def p(n, m):
+    walk_dist = 1/2 * mdl.sum( a.get((i,j,s,t,m,n), 0) * (Len(n, 'o', i) + Len(n, 'd', j)) for i,j,s,t in A )
+
+    time_adj =  mdl.sum( a.get((i,j,s,t,m,n), 0) * (Adj(n, 'o', s) + Adj(n, 'd', t)) for i,j,s,t in A )
+
+    travel_time = mdl.sum( a.get((i,j,s,t,m,n), 0) * (t - s) for i,j,s,t in A )
+
+    fare = rho * mdl.sum( a.get((i,j,s,t,m,n), 0) * data.stop_dist_mat[i,j] for i,j,s,t in A )
+
+    exp_mu_c = np.exp(beta_0c + beta_1c*walk_dist + beta_2c*time_adj + beta_3c*travel_time + beta_4c*fare)
+    exp_mu_t = np.exp(beta_0t + beta_1t*walk_dist + beta_2t*time_adj + beta_3t*travel_time + beta_4t*fare)
+
+    return exp_mu_c / (exp_mu_c + exp_mu_t)
+
+
+mdl.maximize( mdl.sum( p(n,m) * rho * mdl.sum( a.get((i,j,s,t,m,n), 0)*data.stop_dist_mat[i,j] for i,j,s,t in A ) for m in M for n in N )
+              - mdl.sum( gamma * mdl.sum( x.get((i,j,s,t,m), 0)*data.stop_dist_mat[i,j] for i,j,s,t in A ) for m in M ) )
+
+# TODO flow balance constraint #8 #12
+
+mdl.add_constraints( mdl.sum( x.get((i,j,s,t,m), 0) for _,j,_,t in A ) <= 1 for i,_,s,_,m in all_x ) # 9
+
+mdl.add_constraints( a.get((i,j,s,t,m,n), 0) <= x.get((i,j,s,t,m), 0) for i,j,s,t,m,n in all_a ) # 10
+
+mdl.add_constraints( mdl.sum( a.get((i,j,s,t,m,n), 0) for m in M ) <=1 for n in N for i,j,s,t in A  ) # 11
+
+# do not have constraint #13 14 15
+
+mdl.add_constraints( mdl.sum( a.get((i,j,s,t,m,n), 0) for n in N ) <= phi*x.get((i,j,s,t,m), 0)  for i,j,s,t,m in all_x )
+
+
+mdl.parameters.timelimit = 100
+solution = mdl.solve(log_output=True)
+print(solution.solve_status)
 
 
 

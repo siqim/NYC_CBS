@@ -7,6 +7,7 @@ Created on Sat Mar 30 18:49:31 2019
 
 
 import utm
+from copy import deepcopy
 import pickle
 import datetime
 import googlemaps
@@ -31,85 +32,94 @@ def get_time_units(start=8, end=9, year=2016, month=5, day=11):
     unit_ids = np.arange(0, num_time_units)
     return {unit_id:start_time_unit + datetime.timedelta(minutes=idx) for idx, unit_id in enumerate(unit_ids)}
 
-def generate_drop_off_space_time_window(candidate_loc, time, time_units, thres=5):
-    time_window = []
+def generate_space_time_window(candidate_loc, preferred_time, time_units, thres=5):
+    space_time_window = []
     for time_unit_id, time_unit in time_units.items():
-        if abs(time_unit-time).total_seconds()//60 <= thres:
-            time_window.extend([[each_loc, time_unit_id] for each_loc in candidate_loc])
-    return time_window
+        if int(np.round(abs(time_unit-preferred_time).total_seconds()/60)) <= thres:
+            space_time_window.extend([[each_loc, time_unit_id] for each_loc in candidate_loc])
+    return space_time_window
 
-
-# TODO: allow users to get on the bus earlier
-def infer_pick_up_space_time_window(candidate_loc, trip_time, drop_off_space_time_window):
-    drop_off_time_window = (np.array(list(set([each[1] for each in drop_off_space_time_window]))) - trip_time).astype(np.int).tolist()
-    time_window = [[each_loc, each_time_window] for each_loc in candidate_loc for each_time_window in drop_off_time_window]
-    return time_window
-
-def dist_mat_potential_stops(dist_mat_file, potential_stops_with_id, year, month, day, hour, minute):
+def dist_mat_potential_stops(dist_time_mat_filename, potential_stops_with_id, key, year=2019, month=5, day=11, hour=9, minute=0):
     latlon = []
     for value in potential_stops_with_id.values():
         projected_latlon = value.reshape(-1)
         latlon.append(utm.to_latlon(projected_latlon[0], projected_latlon[1], 18, 'T'))
 
     num_stops = len(latlon)
-    gmaps = googlemaps.Client(key='***')
-    departure_time = datetime.datetime(year=2019, month=5, day=11, hour=9, minute=0)
+    gmaps = googlemaps.Client(key=key)
+    departure_time = datetime.datetime(year=year, month=month, day=day, hour=hour, minute=minute)
     dist_mat = np.zeros((num_stops, num_stops))
+    time_mat = np.zeros((num_stops, num_stops))
     for i in trange(num_stops, desc='1st loop'):
         for j in trange(num_stops, desc='2nd loop', leave=False):
             if j > i:
-                dist_dict = gmaps.distance_matrix(origins=latlon[i],
+                time_dist_dict = gmaps.distance_matrix(origins=latlon[i],
                                                  destinations=latlon[j],
                                                  mode="driving",
                                                  departure_time=departure_time,
                                                  traffic_model='best_guess')
-                dist = dist_dict['rows'][0]['elements'][0]['duration_in_traffic']['value'] // 60
+                time_needed = int(np.round(time_dist_dict['rows'][0]['elements'][0]['duration_in_traffic']['value'] / 60))
+                dist = time_dist_dict['rows'][0]['elements'][0]['distance']['value']
+                time_mat[i][j] = time_needed
                 dist_mat[i][j] = dist
 
     dist_mat = np.transpose(dist_mat) + dist_mat
+    dist_mat = dist_mat.astype(np.int32)
 
-    dist_mat = dist_mat.astype(np.int)
+    time_mat = np.transpose(time_mat) + time_mat
+    time_mat = time_mat.astype(np.int32)
 
-    with open(dist_mat_file, 'wb') as fout:
-        pickle.dump(dist_mat, fout)
-    return dist_mat
+    with open(dist_time_mat_filename, 'wb') as fout:
+        pickle.dump([dist_mat, time_mat], fout)
+
+def get_feasible_routes(pick_up_space_time_window, drop_off_space_time_window, potential_stop_time_mat):
+    all_routes = [[each_p[0], each_d[0], each_p[1], each_d[1]] for each_p in pick_up_space_time_window for each_d in drop_off_space_time_window]
+    feasible_routes = []
+    for route in all_routes:
+        time_needed = potential_stop_time_mat[route[0], route[1]]
+        if time_needed == route[-1] - route[-2]:
+            feasible_routes.append(route)
+    return feasible_routes
+
+def get_uniq_feasible_routes(all_feasible_routes):
+    uniq_feasible_routes = []
+    for each_user_routes in all_feasible_routes:
+        for each_route in each_user_routes:
+            if each_route not in uniq_feasible_routes:
+                uniq_feasible_routes.append(each_route)
+    return uniq_feasible_routes
+
+def get_preferred_time_window(pickup_time, dropoff_time, time_units):
+    for time_unit_id, time_unit in time_units.items():
+        if time_unit == pickup_time.replace(second=0):
+            pickup_time_unit = deepcopy(time_unit_id)
+        elif time_unit == dropoff_time.replace(second=0):
+            dropoff_time_unit = deepcopy(time_unit_id)
+    return [pickup_time_unit, dropoff_time_unit]
 
 
 class Data(object):
 
-    def __init__(self, stop_locs, stop_pickup_time_unit, stop_dropoff_time_unit, stop_dist_mat, potential_users_df):
+    def __init__(self, stop_locs, time_units, uniq_feasible_routes, stop_dist_mat, stop_time_mat, potential_users_df):
         self.stop_locs = stop_locs
-        self.stop_pickup_time_unit = stop_pickup_time_unit
-        self.stop_dropoff_time_unit = stop_dropoff_time_unit
+        self.time_units = time_units
+        self.uniq_feasible_routes = uniq_feasible_routes
         self.stop_dist_mat = stop_dist_mat
+        self.stop_time_mat = stop_time_mat
         self.users_df = potential_users_df
 
+def nested_list_to_tuple(nested_list):
+    return [tuple(each_list) for each_list in nested_list]
 
-def get_unit_space_time_window(space_time_window):
-    space_time_window = space_time_window.tolist()
-    space_time_window = [each_window for each_user in space_time_window for each_window in each_user]
-    uniq_space_time_window = []
-    for each in space_time_window:
-        if each not in uniq_space_time_window:
-            uniq_space_time_window.append(each)
-    uniq_space_time_window = np.stack(uniq_space_time_window)
-    return uniq_space_time_window
+if __name__ == '__main__':
+    key = '***'
+    year=2019
+    month=5
+    day=11
+    hour=9
+    minute=0
+    with open('../data/potential_stops_with_id.pickle', 'rb') as f:
+        potential_stops_with_id = pickle.load(f)
 
-
-def get_feasible_time_unit(potential_users, potential_stops_with_id):
-    uniq_pick_up_space_time_window = get_unit_space_time_window(potential_users['pick_up_space_time_window'])
-    uniq_drop_off_space_time_window = get_unit_space_time_window(potential_users['drop_off_space_time_window'])
-
-    stop_pickup_time_unit = {}
-    stop_dropoff_time_unit = {}
-    for stop_id in potential_stops_with_id.keys():
-        feasible_pick_up_time_unit = uniq_pick_up_space_time_window[np.argwhere(uniq_pick_up_space_time_window[:, 0]==stop_id)].squeeze()[:, 1].tolist()
-        feasible_drop_off_time_unit = uniq_drop_off_space_time_window[np.argwhere(uniq_drop_off_space_time_window[:, 0]==stop_id)].squeeze()[:, 1].tolist()
-
-        stop_pickup_time_unit[stop_id] = feasible_pick_up_time_unit
-        stop_dropoff_time_unit[stop_id] = feasible_drop_off_time_unit
-
-    return stop_pickup_time_unit, stop_dropoff_time_unit
-
-
-
+    dist_time_mat_filename = '../data/potential_stop_dist_time_mat.pickle'
+    dist_mat_potential_stops(dist_time_mat_filename, potential_stops_with_id, key, year, month, day, hour, minute)
