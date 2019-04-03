@@ -11,17 +11,19 @@ from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import pairwise_distances
+
 from tqdm import tqdm
 from docplex.mp.model import Model
 
-from b_utils import nested_list_to_tuple
+from b_utils import nested_list_to_tuple, get_uniq_dummy_routes
 
 
 with open('../data/data.pickle', 'rb') as f:
     data = pickle.load(f)
 
 num_potential_users = len(data.users_df)
-num_available_buses = 1
+num_available_buses = 3
 rho = 3 * 1e-3 # ticket price per meter
 gamma = 9 * 1e-3 # operational cost per meter
 phi = 20 # vehicle capacity
@@ -33,7 +35,9 @@ beta_0t, beta_1t, beta_2t, beta_3t, beta_4t = 0, 0, 0, -0.327, -0.145
 P = [p for p in range(num_potential_users)]
 K = [k for k in range(num_available_buses+1)] # k=0 is the virtual bus.
 A = deepcopy(data.routes)
-V = [(i,j) for i in range(data.stop_dist_mat.shape[0]) for j in range(data.stop_dist_mat.shape[0])]
+V_O = get_uniq_dummy_routes([(i,t) for i,_,t,_ in A])
+V_D = get_uniq_dummy_routes([(j,s) for _,j,_,s in A])
+V = get_uniq_dummy_routes(V_O + V_D)
 
 
 all_x = [(p, k) for p in P for k in K]
@@ -46,6 +50,24 @@ mdl = Model(name='CB-Planning')
 x = mdl.binary_var_dict(all_x, name='x')
 y = mdl.binary_var_dict(all_y, name='y')
 
+def mu(O, D, t_o, t_d, p):
+
+    OD_coords = data.users_df.iloc[p]['coords']
+    walk_dist = 1/2 * (pairwise_distances(OD_coords[:, :2], data.stop_locs[O], metric='l1') + pairwise_distances(OD_coords[:, 2:], data.stop_locs[D], metric='l1'))
+
+    preferred_time_window = data.users_df.iloc[p]['preferred_time_window']
+    time_adj = abs(preferred_time_window[0] - t_o) + abs(preferred_time_window[1] - t_d)
+
+    travel_time = t_d - t_o
+
+    fare = rho * data.stop_dist_mat[O, D]
+
+    exp_mu_c = np.exp(beta_0c + beta_1c*walk_dist + beta_2c*time_adj + beta_3c*travel_time + beta_4c*fare)
+    exp_mu_t = np.exp(beta_0t + beta_1t*walk_dist + beta_2t*time_adj + beta_3t*travel_time + beta_4t*fare)
+
+    score = exp_mu_c / (exp_mu_c + exp_mu_t)
+
+    return score.item()
 
 def dist(p, k):
     if k == 0:
@@ -55,6 +77,8 @@ def dist(p, k):
         possible_Ds = data.users_df.iloc[p]['candidate_drop_off_loc']
         O = 0
         D = 0
+        t_o = data.T_min
+        t_d = data.T_max
         for i, j, s, t in A:
             if y[i,j,s,t,k]:
                 if i in possible_Os:
@@ -63,51 +87,15 @@ def dist(p, k):
                 if j in possible_Ds:
                     D = j
                     t_d = t
-        return data.stop_dist_mat[O, D]
-
-
-#def dist(a,b):
-#    return 1
-def mu(a,b):
-    return 1
-
-import time
-
-s = time.time()
-mdl.maximize( mdl.sum(x[p,k] * dist(p,k) * mu(p,k) * rho for p in P for k in K )
-                - mdl.sum(y[i,j,s,t,k] * data.stop_dist_mat[i,j] * gamma for k in K for i,j,s,t in A) )
-e = time.time()
-print(e-s)
-
-
-mdl.add_constraints( mdl.sum(x[p,k] for k in K)==1 for p in P)
-
-mdl.add_constraints( mdl.sum(x[p,k] for p in P) <= phi  for k in K if k!=0)
-
-mdl.add_constraints( x[p,k] <= mdl.sum( y[i,j,t,s,k] \
-                    for i,j,t,s in data.users_df.iloc[p]['feasible_routes']) for p in P for k in K if k != 0 )
-
-
-for k in tqdm(K):
-    for i, t in V:
-        if i == data.dummy_stop_id and t == data.t_min:
-            mdl.add_constraint(mdl.sum( y.get((i,j,t,s,k),0) for j,s in V) - mdl.sum( y.get((j,i,s,t,k),0) for j,s in V)  == 1)
-        elif i == data.dummy_stop_id and t == data.t_max:
-            mdl.add_constraint(mdl.sum( y.get((i,j,t,s,k),0) for j,s in V) - mdl.sum( y.get((j,i,s,t,k),0) for j,s in V)  == -1)
+        if O == 0 or D == 0:
+            return 0
         else:
-            mdl.add_constraint(mdl.sum( y.get((i,j,t,s,k),0) for j,s in V) - mdl.sum( y.get((j,i,s,t,k),0) for j,s in V)  == 0)
+            return data.stop_dist_mat[O, D] * mu(O, D, t_o, t_d, p)
 
 
-mdl.parameters.timelimit = 100
-solution = mdl.solve(log_output=True)
-print(solution.solve_status)
 
-
-mdl.minimize( mdl.sum(c[p,k]*x[p,k] for p in P for k in K)
-                + w * mdl.sum( data.stop_dist_mat[i,j]*gamma*y[i,j,t,s,k] for k in K for i,j,t,s in A))
-
-mdl.add_indicator_constraints(mdl.indicator_constraint(x[p,k], c[p,k]==1) for p in P for k in K if k==0)
-mdl.add_indicator_constraints(mdl.indicator_constraint(x[p,k], c[p,k]==0) for p in P for k in K if k!=0)
+mdl.maximize( mdl.sum(x[p,k] * dist(p,k) * rho for p in P for k in K )
+                - mdl.sum(y[i,j,s,t,k] * data.stop_dist_mat[i,j] * gamma for k in K for i,j,s,t in A) )
 
 
 
@@ -115,85 +103,28 @@ mdl.add_constraints( mdl.sum(x[p,k] for k in K)==1 for p in P)
 
 mdl.add_constraints( mdl.sum(x[p,k] for p in P) <= phi  for k in K if k!=0)
 
-mdl.add_constraints(  alpha*phi <= mdl.sum( x[p,k] for p in P) for k in K if k!=0)
+mdl.add_constraints( x[p,k] <= mdl.sum( y[i,j,t,s,k] \
+                    for i,j,t,s in data.users_df.iloc[p]['A_O']) for p in P for k in K if k != 0 )
 
 mdl.add_constraints( x[p,k] <= mdl.sum( y[i,j,t,s,k] \
-                    for i,j,t,s in data.users_df.iloc[p]['feasible_routes']) for p in P for k in K if k != 0 )
+                    for i,j,t,s in data.users_df.iloc[p]['A_D']) for p in P for k in K if k != 0 )
 
 
 
+mdl.add_constraints(mdl.sum( y[data.dummy_stop_id,j,data.T_min,s,k] for j,s in V_D) \
+                   - mdl.sum( y[j,data.dummy_stop_id,s,data.T_min,k] for j,s in V_O)  == 1 for k in K)
 
+mdl.add_constraints(mdl.sum( y[data.dummy_stop_id,j,data.T_max,s,k] for j,s in V_D) \
+                   - mdl.sum( y[j,data.dummy_stop_id,s,data.T_max,k] for j,s in V_O)  == -1 for k in K)
 
-mdl.parameters.timelimit = 100
-solution = mdl.solve(log_output=True)
-print(solution.solve_status)
-
-
-with open('solution.xml','w') as f:
-    f.write(solution.export_as_mst_string())
-
-
-
-
-N = [n for n in range(num_potential_users)]
-M = [m for m in range(num_available_buses+1)] # k=0 is the virtual bus.
-
-
-all_x = [route + [m] for m in M for route in A]
-all_a = [each_feasible_route + [m] + [n] for n, each_users_feasible_routes in enumerate(data.users_df['feasible_routes'])\
-         for each_feasible_route in each_users_feasible_routes for m in M]
-
-
-mdl = Model(name='CB-Planning')
-x = mdl.binary_var_dict(nested_list_to_tuple(all_x), name='x')
-a = mdl.binary_var_dict(nested_list_to_tuple(all_a), name='a')
-
-
-def Len():
-    pass
-def Adj():
-    pass
-def p(n, m):
-#    walk_dist = 1/2 * mdl.sum( a.get((i,j,s,t,m,n), 0) * (Len(n, 'o', i) + Len(n, 'd', j)) for i,j,s,t in A )
-#
-#    time_adj =  mdl.sum( a.get((i,j,s,t,m,n), 0) * (Adj(n, 'o', s) + Adj(n, 'd', t)) for i,j,s,t in A )
-#
-#    travel_time = mdl.sum( a.get((i,j,s,t,m,n), 0) * (t - s) for i,j,s,t in A )
-#
-#    fare = rho * mdl.sum( a.get((i,j,s,t,m,n), 0) * data.stop_dist_mat[i,j] for i,j,s,t in A )
-#
-#    exp_mu_c = np.exp(beta_0c + beta_1c*walk_dist + beta_2c*time_adj + beta_3c*travel_time + beta_4c*fare)
-#    exp_mu_t = np.exp(beta_0t + beta_1t*walk_dist + beta_2t*time_adj + beta_3t*travel_time + beta_4t*fare)
-#
-#    score = exp_mu_c / (exp_mu_c + exp_mu_t)
-    score = 1
-    return score
-
-
-
-mdl.maximize( mdl.sum( p(n,m) * rho * a[i,j,s,t,m,n] * data.stop_dist_mat[i,j] for i,j,s,t,m,n in all_a)
-                 - mdl.sum( gamma*x[i,j,s,t,m]*data.stop_dist_mat[i,j] for i,j,s,t,m in all_x))
-
-
-# TODO flow balance constraint #8 #12
-
-#mdl.add_constraints( mdl.sum( x.get((i,j,s,t,m), 0) for _,j,_,t in A ) <= 1 for i,_,s,_,m in all_x ) # 9
-
-mdl.add_constraints( a.get((i,j,s,t,m,n), 0) <= x.get((i,j,s,t,m), 0) for i,j,s,t,m,n in all_a ) # 10
-
-#mdl.add_constraints( mdl.sum( a.get((i,j,s,t,m,n), 0) for m in M ) <=1 for n in N for i,j,s,t in A  ) # 11
-
-# do not have constraint #13 14 15
-
-#mdl.add_constraints( mdl.sum( a.get((i,j,s,t,m,n), 0) for n in N ) <= phi*x.get((i,j,s,t,m), 0)  for i,j,s,t,m in all_x ) # 16
+mdl.add_constraints(mdl.sum( y.get((i,j,t,s,k),0) for j,s in V_D) \
+                   - mdl.sum( y.get((j,i,s,t,k),0) for j,s in V_O)  == 0 for k in K for i,t in V \
+                       if i!=data.dummy_stop_id and t!=data.T_min and t!=data.T_max)
 
 
 mdl.parameters.timelimit = 100
 solution = mdl.solve(log_output=True)
 print(solution.solve_status)
-
-
-
 
 
 

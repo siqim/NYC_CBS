@@ -119,6 +119,52 @@ def get_preferred_time_window(pickup_time, dropoff_time, time_units):
             dropoff_time_unit = deepcopy(time_unit_id)
     return [pickup_time_unit, dropoff_time_unit]
 
+def get_worst_time_window(pick_up_space_time_window, drop_off_space_time_window):
+    p = []
+    for each_window in pick_up_space_time_window:
+        p.append(each_window[1])
+    if p == []:
+        return -1
+    else:
+        min_p = min(p)
+
+    d = []
+    for each_window in drop_off_space_time_window:
+        d.append(each_window[1])
+    if d == []:
+        return -1
+    else:
+        max_d = max(d)
+
+    return [min_p, max_d]
+
+def get_A_O(pick_up_space_time_window, worst_time_window, stop_time_mat, candidate_drop_off_loc):
+    if worst_time_window == -1:
+        return []
+
+    A_O = []
+    latest = worst_time_window[1]
+    for i, t in pick_up_space_time_window:
+        for j in range(1, stop_time_mat.shape[0]):
+            s = t + stop_time_mat[i, j]
+            delta = np.min([stop_time_mat[j, each_dropoff] for each_dropoff in candidate_drop_off_loc])
+            if s + delta <= latest and t!=s:
+                A_O.append([i,j,t,s])
+    return A_O
+
+def get_A_D(drop_off_space_time_window, worst_time_window, stop_time_mat, candidate_pick_up_loc):
+    if worst_time_window == -1:
+        return []
+
+    A_D = []
+    earliest = worst_time_window[0]
+    for j, s in drop_off_space_time_window:
+        for i in range(1, stop_time_mat.shape[0]):
+            t = s - stop_time_mat[i, j]
+            delta = np.min([stop_time_mat[each_pickup, i] for each_pickup in candidate_pick_up_loc])
+            if t - delta >= earliest and t!=s:
+                A_D.append([i,j,t,s])
+    return A_D
 
 
 class Data(object):
