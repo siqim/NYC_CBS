@@ -13,7 +13,7 @@ import datetime
 import googlemaps
 import numpy as np
 from sklearn.metrics import pairwise_distances
-from tqdm import trange, tqdm
+from tqdm import trange
 
 
 def generate_candidate_stop_id_for_each_user(user_loc, potential_stops_with_id, thres=500):
@@ -76,15 +76,15 @@ def dist_mat_potential_stops(dist_time_mat_filename, potential_stops_with_id, ke
     with open(dist_time_mat_filename, 'wb') as fout:
         pickle.dump([dist_mat, time_mat], fout)
 
-def get_feasible_routes(pick_up_space_time_window, drop_off_space_time_window, potential_stop_time_mat):
-    all_routes = [[each_p[0], each_d[0], each_p[1], each_d[1]] for each_p in pick_up_space_time_window for each_d in drop_off_space_time_window]
-    feasible_routes = []
-    for route in all_routes:
-        if route[2] != route[3]:
-            time_needed = potential_stop_time_mat[route[0], route[1]]
-            if time_needed == route[-1] - route[-2]:
-                feasible_routes.append(route)
-    return feasible_routes
+#def get_feasible_routes(pick_up_space_time_window, drop_off_space_time_window, potential_stop_time_mat):
+#    all_routes = [[each_p[0], each_d[0], each_p[1], each_d[1]] for each_p in pick_up_space_time_window for each_d in drop_off_space_time_window]
+#    feasible_routes = []
+#    for route in all_routes:
+#        if route[2] != route[3]:
+#            time_needed = potential_stop_time_mat[route[0], route[1]]
+#            if time_needed == route[-1] - route[-2]:
+#                feasible_routes.append(route)
+#    return feasible_routes
 
 #def get_uniq_feasible_routes(all_feasible_routes):
 #    uniq_feasible_routes = []
@@ -94,13 +94,13 @@ def get_feasible_routes(pick_up_space_time_window, drop_off_space_time_window, p
 #                uniq_feasible_routes.append(each_route)
 #    return uniq_feasible_routes
 
-def get_uniq_feasible_routes(all_feasible_routes):
-    uniq_feasible_routes = {}
-    for each_user_routes in all_feasible_routes:
-        for each_route in each_user_routes:
-            if uniq_feasible_routes.get(tuple(each_route), 0) == 0:
-                uniq_feasible_routes[tuple(each_route)] = 1
-    return list(uniq_feasible_routes.keys())
+#def get_uniq_feasible_routes(all_feasible_routes):
+#    uniq_feasible_routes = {}
+#    for each_user_routes in all_feasible_routes:
+#        for each_route in each_user_routes:
+#            if uniq_feasible_routes.get(tuple(each_route), 0) == 0:
+#                uniq_feasible_routes[tuple(each_route)] = 1
+#    return list(uniq_feasible_routes.keys())
 
 def get_uniq_dummy_routes(dummy_routes):
     uniq_dummy_routes = {}
@@ -109,6 +109,8 @@ def get_uniq_dummy_routes(dummy_routes):
             uniq_dummy_routes[each_route] = 1
     return list(uniq_dummy_routes.keys())
 
+
+# TODO round to nearest minute.
 def get_preferred_time_window(pickup_time, dropoff_time, time_units):
     for time_unit_id, time_unit in time_units.items():
         if time_unit == pickup_time.replace(second=0):
@@ -118,9 +120,10 @@ def get_preferred_time_window(pickup_time, dropoff_time, time_units):
     return [pickup_time_unit, dropoff_time_unit]
 
 
+
 class Data(object):
 
-    def __init__(self, stop_locs, time_units, routes, stop_dist_mat, stop_time_mat, potential_users_df, t_max, t_min, dummy_stop_id):
+    def __init__(self, stop_locs, time_units, routes, stop_dist_mat, stop_time_mat, potential_users_df, T_min, T_max, dummy_stop_id):
         self.stop_locs = stop_locs
         self.time_units = time_units
         self.routes = routes
@@ -128,14 +131,14 @@ class Data(object):
         self.stop_time_mat = stop_time_mat
         self.users_df = potential_users_df
         self.dummy_stop_id = dummy_stop_id
-        self.t_min = t_min
-        self.t_max = t_max
+        self.T_min = T_min
+        self.T_max = T_max
 
 def nested_list_to_tuple(nested_list):
     return [tuple(each_list) for each_list in nested_list]
 
 if __name__ == '__main__':
-    key = 'AIzaSyBcUhH-M6cIKnnjxscUDLKW974AybrEqUQ'
+    key = '***'
     year=2019
     month=5
     day=11

@@ -9,8 +9,7 @@ Created on Sat Mar 30 15:49:12 2019
 import pickle
 import numpy as np
 from b_utils import generate_candidate_stop_id_for_each_user, get_time_units,\
-                    generate_space_time_window, get_feasible_routes,\
-                    get_uniq_feasible_routes, get_preferred_time_window,\
+                    generate_space_time_window, get_preferred_time_window,\
                     get_uniq_dummy_routes, Data
 
 print('Loading data...')
@@ -33,8 +32,6 @@ potential_users['candidate_drop_off_loc'] = potential_users['coords'].apply(lamb
 # although we consider people in 8-9 am, we need to enlarge time window allowed
 # such that we can serve people who might want to get on the bus before 8 am or after 10 am.
 time_units = get_time_units(7, 10)
-t_min = 0
-t_max = max(list(time_units.keys()))
 
 potential_users['drop_off_space_time_window'] = potential_users[['candidate_drop_off_loc', 'dropoff_datetime']].apply(lambda x:\
                                                 generate_space_time_window(x[0], x[1], time_units, thres=5), axis=1)
@@ -43,20 +40,40 @@ potential_users['pick_up_space_time_window'] = potential_users[['candidate_pick_
                                                generate_space_time_window(x[0], x[1], time_units, thres=5), axis=1)
 
 
-potential_users['feasible_routes'] = potential_users[['pick_up_space_time_window', 'drop_off_space_time_window']].apply(lambda x:\
-                                     get_feasible_routes(x[0], x[1], potential_stop_time_mat), axis=1)
-uniq_feasible_routes = get_uniq_feasible_routes(potential_users['feasible_routes'])
-dummy_routes_O = get_uniq_dummy_routes([(0, route[1], t_min, route[3]) for route in uniq_feasible_routes])
-dummy_routes_D = get_uniq_dummy_routes([(route[0], 0, route[2], t_max) for route in uniq_feasible_routes])
 
-routes = uniq_feasible_routes + dummy_routes_O + dummy_routes_D
-assert len(routes) == len(dummy_routes_D) + len(dummy_routes_O) + len(uniq_feasible_routes)
+all_t = [ each_window[1] for each_users_window in potential_users['pick_up_space_time_window'] for each_window in each_users_window ]
+all_s = [ each_window[1] for each_users_window in potential_users['drop_off_space_time_window'] for each_window in each_users_window ]
+
+
+t_min = np.min(all_t)
+t_max = np.max(all_t)
+s_min = np.min(all_s)
+s_max = np.max(all_s)
+T_min = np.min([t_min, s_min])
+T_max = np.max([t_max, s_max])
+
+num_stops = potential_stop_dist_mat.shape[0]
+all_routes = [(i,j,t,s) for i in range(1, num_stops) for j in range(1, num_stops) for t in range(t_min, t_max+1) for s in range(s_min, s_max+1)\
+                       if potential_stop_time_mat[i,j]==s-t and t!=s]
+dummy_routes_O = get_uniq_dummy_routes([(0, route[1], T_min, route[3]) for route in all_routes])
+dummy_routes_D = get_uniq_dummy_routes([(route[0], 0, route[2], T_max) for route in all_routes])
+
+routes = all_routes + dummy_routes_O + dummy_routes_D
+assert len(routes) == len(dummy_routes_D) + len(dummy_routes_O) + len(all_routes)
+
+
+#potential_users['feasible_routes'] = potential_users[['pick_up_space_time_window', 'drop_off_space_time_window']].apply(lambda x:\
+#                                     get_feasible_routes(x[0], x[1], potential_stop_time_mat), axis=1)
+#uniq_feasible_routes = get_uniq_feasible_routes(potential_users['feasible_routes'])
+
 
 
 potential_users['preferred_time_window'] = potential_users[['pickup_datetime', 'dropoff_datetime']].apply(lambda x:\
                                            get_preferred_time_window(x[0], x[1], time_units), axis=1)
+potential_users['earliest_pickup_time_window'] = [ np.min([each_window[1] for each_window in each_users_windows])  \
+                                                   for each_users_windows in potential_users['pick_up_space_time_window']]
 
-data = Data(potential_stops_with_id, time_units, routes, potential_stop_dist_mat, potential_stop_time_mat, potential_users, t_max, t_min, dummy_stop_id=0)
+data = Data(potential_stops_with_id, time_units, routes, potential_stop_dist_mat, potential_stop_time_mat, potential_users, T_min, T_max, dummy_stop_id=0)
 
 print('Saving data...')
 with open('../data/data.pickle', 'wb') as fout:
