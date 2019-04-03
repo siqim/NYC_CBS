@@ -6,6 +6,7 @@ Created on Sat Mar 30 20:02:27 2019
 """
 
 
+import time
 import pickle
 from copy import deepcopy
 import numpy as np
@@ -13,10 +14,9 @@ import matplotlib.pyplot as plt
 
 from sklearn.metrics import pairwise_distances
 
-from tqdm import tqdm
 from docplex.mp.model import Model
 
-from b_utils import nested_list_to_tuple, get_uniq_dummy_routes
+from b_utils import get_uniq_dummy_routes
 
 
 with open('../data/data.pickle', 'rb') as f:
@@ -37,7 +37,7 @@ K = [k for k in range(num_available_buses+1)] # k=0 is the virtual bus.
 A = deepcopy(data.routes)
 V_O = get_uniq_dummy_routes([(i,t) for i,_,t,_ in A])
 V_D = get_uniq_dummy_routes([(j,s) for _,j,_,s in A])
-V = get_uniq_dummy_routes(V_O + V_D)
+V = list(set(V_O).intersection(set(V_D)))
 
 
 all_x = [(p, k) for p in P for k in K]
@@ -93,12 +93,16 @@ def dist(p, k):
             return data.stop_dist_mat[O, D] * mu(O, D, t_o, t_d, p)
 
 
-
+print('Creating models...')
+start_0 = time.time()
 mdl.maximize( mdl.sum(x[p,k] * dist(p,k) * rho for p in P for k in K )
                 - mdl.sum(y[i,j,s,t,k] * data.stop_dist_mat[i,j] * gamma for k in K for i,j,s,t in A) )
+end_0 = time.time()
+print('[%.2f] min used till now.' % (end_0-start_0)/60)
 
 
-
+print('Adding the first four constrations...')
+start_1 = time.time()
 mdl.add_constraints( mdl.sum(x[p,k] for k in K)==1 for p in P)
 
 mdl.add_constraints( mdl.sum(x[p,k] for p in P) <= phi  for k in K if k!=0)
@@ -108,23 +112,29 @@ mdl.add_constraints( x[p,k] <= mdl.sum( y[i,j,t,s,k] \
 
 mdl.add_constraints( x[p,k] <= mdl.sum( y[i,j,t,s,k] \
                     for i,j,t,s in data.users_df.iloc[p]['A_D']) for p in P for k in K if k != 0 )
+end_1 = time.time()
+print('[%.2f] min used till now.' % (end_1-start_1)/60)
 
 
+print('Adding the last three constrations...')
+start_2 = time.time()
+mdl.add_constraints(mdl.sum( y[data.dummy_stop_id,j,data.T_min,s,k] for j,s in V_D if j!=data.dummy_stop_id and s>data.T_min) \
+                   - mdl.sum( y[j,data.dummy_stop_id,s,data.T_min,k] for j,s in V_O if j!=data.dummy_stop_id and s<data.T_min)  == 1 for k in K)
 
-mdl.add_constraints(mdl.sum( y[data.dummy_stop_id,j,data.T_min,s,k] for j,s in V_D) \
-                   - mdl.sum( y[j,data.dummy_stop_id,s,data.T_min,k] for j,s in V_O)  == 1 for k in K)
+mdl.add_constraints(mdl.sum( y[data.dummy_stop_id,j,data.T_max,s,k] for j,s in V_D if j!=data.dummy_stop_id and s>data.T_max) \
+                   - mdl.sum( y[j,data.dummy_stop_id,s,data.T_max,k] for j,s in V_O if j!=data.dummy_stop_id and s<data.T_max)  == -1 for k in K)
 
-mdl.add_constraints(mdl.sum( y[data.dummy_stop_id,j,data.T_max,s,k] for j,s in V_D) \
-                   - mdl.sum( y[j,data.dummy_stop_id,s,data.T_max,k] for j,s in V_O)  == -1 for k in K)
-
-mdl.add_constraints(mdl.sum( y.get((i,j,t,s,k),0) for j,s in V_D) \
-                   - mdl.sum( y.get((j,i,s,t,k),0) for j,s in V_O)  == 0 for k in K for i,t in V \
+mdl.add_constraints(mdl.sum( y[i,j,t,s,k] for j,s in V_D if s>t and i!=j and s-t==data.stop_time_mat[i,j]) \
+                   - mdl.sum( y[j,i,s,t,k] for j,s in V_O if t>s and i!=j and t-s==data.stop_time_mat[j,i])  == 0 for k in K for i,t in V \
                        if i!=data.dummy_stop_id and t!=data.T_min and t!=data.T_max)
+end_2 = time.time()
+print('[%.2f] min used till now.' % (end_2-start_2)/60)
 
-
-mdl.parameters.timelimit = 100
+print('Solving...')
+mdl.parameters.timelimit = 1000
 solution = mdl.solve(log_output=True)
 print(solution.solve_status)
+print('[%.2f] min used in total.' % (time.time()-start_0)/60)
 
 
 
@@ -134,43 +144,42 @@ print(solution.solve_status)
 
 
 
-
-rnd = np.random
-rnd.seed(0)
-
-n = 10 # number of clients
-Q = 15 # vehicle capacity
-N = [i for i in range(1, n+1)] # set of clients
-V = [0] + N # set of nodes
-q = {i: rnd.randint(1, 10) for i in N} # the amount that has to be delivered to customer i \in N
-
-loc_x = rnd.rand(len(V))*200
-loc_y = rnd.rand(len(V))*100
-
-plt.scatter(loc_x[1:], loc_y[1:], c='b')
-for i in N:
-    plt.annotate('$q_{%d}=%d$'%(i, q[i]), (loc_x[i]+2, loc_y[i]))
-
-plt.plot(loc_x[0], loc_y[0], c='r', marker='s')
-plt.axis('equal')
-
-A = [(i, j) for i in V for j in V if i!=j] # set of arcs
-c = {(i, j): ((loc_x[i]-loc_x[j])**2 + (loc_y[i]-loc_y[j])**2)**0.5 for i, j in A} # cost of travel over arc (i, j) \in A
-
-
-mdl = Model('CVRP')
-x = mdl.binary_var_dict(A, name='x')
-u = mdl.continuous_var_dict(N, ub=Q, name='u')
-
-mdl.minimize(mdl.sum(c[i, j] * x[i, j] for i, j in A))
-mdl.add_constraints( mdl.sum(x[i, j] for j in V if j!=i)==1 for i in N )
-mdl.add_constraints( mdl.sum(x[i, j] for i in V if j!=i)==1 for j in N )
-mdl.add_indicator_constraints(mdl.indicator_constraint(x[i, j], u[j] == u[i]+q[j]) for i, j in A if i!=0 and j!=0)
-mdl.add_constraints(u[i]>=q[i] for i in N)
-
-mdl.parameters.timelimit = 5
-solution = mdl.solve(log_output=True)
-print(solution.solve_status)
+#rnd = np.random
+#rnd.seed(0)
+#
+#n = 10 # number of clients
+#Q = 15 # vehicle capacity
+#N = [i for i in range(1, n+1)] # set of clients
+#V = [0] + N # set of nodes
+#q = {i: rnd.randint(1, 10) for i in N} # the amount that has to be delivered to customer i \in N
+#
+#loc_x = rnd.rand(len(V))*200
+#loc_y = rnd.rand(len(V))*100
+#
+#plt.scatter(loc_x[1:], loc_y[1:], c='b')
+#for i in N:
+#    plt.annotate('$q_{%d}=%d$'%(i, q[i]), (loc_x[i]+2, loc_y[i]))
+#
+#plt.plot(loc_x[0], loc_y[0], c='r', marker='s')
+#plt.axis('equal')
+#
+#A = [(i, j) for i in V for j in V if i!=j] # set of arcs
+#c = {(i, j): ((loc_x[i]-loc_x[j])**2 + (loc_y[i]-loc_y[j])**2)**0.5 for i, j in A} # cost of travel over arc (i, j) \in A
+#
+#
+#mdl = Model('CVRP')
+#x = mdl.binary_var_dict(A, name='x')
+#u = mdl.continuous_var_dict(N, ub=Q, name='u')
+#
+#mdl.minimize(mdl.sum(c[i, j] * x[i, j] for i, j in A))
+#mdl.add_constraints( mdl.sum(x[i, j] for j in V if j!=i)==1 for i in N )
+#mdl.add_constraints( mdl.sum(x[i, j] for i in V if j!=i)==1 for j in N )
+#mdl.add_indicator_constraints(mdl.indicator_constraint(x[i, j], u[j] == u[i]+q[j]) for i, j in A if i!=0 and j!=0)
+#mdl.add_constraints(u[i]>=q[i] for i in N)
+#
+#mdl.parameters.timelimit = 5
+#solution = mdl.solve(log_output=True)
+#print(solution.solve_status)
 
 
 
