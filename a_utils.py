@@ -12,8 +12,11 @@ from itertools import repeat
 import numpy as np
 from scipy.spatial import ConvexHull
 
-from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances
+
+from pyclustering.cluster.kmeans import kmeans
+from pyclustering.cluster.center_initializer import kmeans_plusplus_initializer
+from pyclustering.utils.metric import type_metric, distance_metric
 
 import folium
 from a_color_brewer import color_brewer
@@ -79,7 +82,7 @@ def visz_stops_and_convexhull(coords, labels, potential_stops):
                         color=palette[cluster_idx],
                         fill=True,
                         fill_color=palette[cluster_idx],
-                        popup='Origin ' + str(cluster)
+                        popup='Origin ' + str(cluster) + ' k=' + str(k)
                     ).add_to(m)
 
             for k in D_centers:
@@ -95,11 +98,16 @@ def visz_stops_and_convexhull(coords, labels, potential_stops):
                         color=palette[cluster_idx],
                         fill=True,
                         fill_color=palette[cluster_idx],
-                        popup='Destination ' + str(cluster)
+                        popup='Destination ' + str(cluster) + ' k=' + str(k)
                     ).add_to(m)
 
     m.save('stops_and_convexhull.html')
-    return {i:all_potential_stops[i].reshape(1, -1) for i in range(len(all_potential_stops))}
+
+    potential_stops = {i:all_potential_stops[i-1].reshape(1, -1) for i in range(1, len(all_potential_stops)+1)}
+
+    potential_stops[0] = 'DUMMY_STOPS'
+
+    return potential_stops
 
 
 def generate_potential_stops(coords, labels, area_covered_by_one_stop):
@@ -112,13 +120,17 @@ def generate_potential_stops(coords, labels, area_covered_by_one_stop):
         return np.arange(start=1, stop=max_k+1)
 
     def multi_k_means(coords, area_covered_by_one_stop):
+        manhattan_metric = distance_metric(type_metric.MANHATTAN)
         k_range = k_get_range(coords, area_covered_by_one_stop)
 
         centers = {}
         for k in k_range:
-            km = KMeans(n_clusters=k).fit(coords)
-            c = km.cluster_centers_
-            centers[k] = c
+            initial_centers = kmeans_plusplus_initializer(coords, k).initialize() # k-means ++
+            kmeans_instance = kmeans(coords, initial_centers, metric=manhattan_metric) # L1
+
+            kmeans_instance.process()
+            final_centers = kmeans_instance.get_centers()
+            centers[k] = np.stack(final_centers)
         return centers
 
     res = {}
@@ -144,18 +156,19 @@ def calc_in_cluster_stats(labels, coords, timestamps, skip_critical=True):
                 continue
             indices = np.argwhere(labels==label)
             c_coords = coords[indices].squeeze()
-            c_timestamps = timestamps[indices].squeeze().reshape(-1, 1)
+            c_timestamps = timestamps[indices].squeeze().reshape(-1, 2)
 
             O_hull_area = ConvexHull(c_coords[:, :2]).volume # in 2-D case .volume returns real area.
             D_hull_area = ConvexHull(c_coords[:, 2:]).volume
 
-            dist = pairwise_distances(c_coords[:, :2], metric='l1') \
-                    + pairwise_distances(c_coords[:, 2:], metric='l1') # in m
+            dist = pairwise_distances(c_coords[:, :2], metric='l2') \
+                    + pairwise_distances(c_coords[:, 2:], metric='l2') # in m
             dist_mean, dist_std = np.mean(dist), np.std(dist)
             dist_percentile = list(map(np.percentile, repeat(dist), [10, 25, 50, 75, 100]))
             del dist
 
-            diff_Ts = pairwise_distances(c_timestamps, metric='l1') * 1.66667e-11 # ns to mi
+            diff_Ts = pairwise_distances(c_timestamps[:, [0]], metric='l1') * 1.66667e-11 \
+                        + pairwise_distances(c_timestamps[:, [1]], metric='l1') * 1.66667e-11 # ns to mi
             diff_Ts_mean, diff_Ts_std = np.mean(diff_Ts), np.std(diff_Ts)
             diff_Ts_percentile = list(map(np.percentile, repeat(diff_Ts), [10, 25, 50, 75, 100]))
             del diff_Ts
@@ -286,7 +299,7 @@ def cluster_map_visz(coords, labels, show_noise=False, show_od=False, only_o=Fal
                 if skip_critical and label == 0:
                     continue
 
-                dist = pairwise_distances(coord[:2].reshape(1, -1), coord[2:].reshape(1, -1), metric='l1')
+                dist = pairwise_distances(coord[:2].reshape(1, -1), coord[2:].reshape(1, -1), metric='l2')
                 folium.PolyLine(
                     locations=[o, d],
                     color='#f5f5f5',

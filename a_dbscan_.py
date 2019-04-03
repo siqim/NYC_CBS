@@ -39,14 +39,19 @@ def dbscan(coords, timestamps, eps_d=500, eps_t=10/1.66667e-11, min_samples=5, m
     neighborhoods_D = neighbors_model_D.radius_neighbors(coords[:, 2:], eps_d, return_distance=False)
 
 
-    neighbors_model_t = NearestNeighbors(radius=eps_t, leaf_size=leaf_size, metric=metric_t, n_jobs=n_jobs, algorithm=algorithm)
-    neighbors_model_t.fit(timestamps)
-    neighborhoods_t = neighbors_model_t.radius_neighbors(timestamps, eps_t, return_distance=False)
+    neighbors_model_t_O = NearestNeighbors(radius=eps_t, leaf_size=leaf_size, metric=metric_t, n_jobs=n_jobs, algorithm=algorithm)
+    neighbors_model_t_O.fit(timestamps[:, [0]])
+    neighborhoods_t_O = neighbors_model_t_O.radius_neighbors(timestamps[:, [0]], eps_t, return_distance=False)
+
+    neighbors_model_t_D = NearestNeighbors(radius=eps_t, leaf_size=leaf_size, metric=metric_t, n_jobs=n_jobs, algorithm=algorithm)
+    neighbors_model_t_D.fit(timestamps[:, [1]])
+    neighborhoods_t_D = neighbors_model_t_D.radius_neighbors(timestamps[:, [1]], eps_t, return_distance=False)
+
 
     n_neighbors = np.zeros(coords.shape[0], dtype=np.int16)
     neighborhoods = np.empty(coords.shape[0], dtype=object)
     for i in range(coords.shape[0]):
-        neighbor_i = np.array(list(set(neighborhoods_O[i]).intersection(set(neighborhoods_D[i]), set(neighborhoods_t[i]))))
+        neighbor_i = np.array(list(set(neighborhoods_O[i]).intersection(set(neighborhoods_D[i]), set(neighborhoods_t_O[i]), set(neighborhoods_t_D[i]))))
         neighborhoods[i] = neighbor_i
 
         n_neighbors[i] = neighbor_i.shape[0]

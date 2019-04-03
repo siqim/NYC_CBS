@@ -19,13 +19,14 @@ with open('../data/yg_tripdata_2016-05.pickle', 'rb') as f:
 
 subset = nyc_taxi[(nyc_taxi['pick_day']==11) & (nyc_taxi['pick_hour']>=8) & (nyc_taxi['pick_hour']<=9) & \
                   (nyc_taxi['drop_day']==11) & (nyc_taxi['drop_hour']>=8) & (nyc_taxi['drop_hour']<=9)] # & (nyc_taxi['type']=='green')]
+del nyc_taxi
 
 all_coords = np.stack(subset['coords'])
-all_timestamp = (subset['dropoff_datetime'].values).reshape(-1, 1)
+all_timestamps = subset[['pickup_datetime','dropoff_datetime']].values
 
 
 print('Clustering...')
-db = DBSCAN(eps_d=300, eps_t=10/1.66667e-11, min_samples=10, metric_d='l1', metric_t='l1').fit(all_coords, all_timestamp)
+db = DBSCAN(eps_d=300, eps_t=7/1.66667e-11, min_samples=10, metric_d='l2', metric_t='l1').fit(all_coords, all_timestamps)
 labels = filter_low_quality_cluster(db.labels_, thres=20)
 print(list(zip(*np.unique(labels, return_counts=True))))
 
@@ -33,7 +34,7 @@ print('Visualizing clusters...')
 cluster_map_visz(all_coords, labels, show_noise=False, show_od=True, only_o=False, skip_critical=False)
 
 print('Computing statistics...')
-stats = calc_in_cluster_stats(labels, all_coords, all_timestamp, skip_critical=False)
+stats = calc_in_cluster_stats(labels, all_coords, all_timestamps, skip_critical=False)
 
 print('Generating potential stops...')
 potential_stops = generate_potential_stops(all_coords, labels, area_covered_by_one_stop=(500)**2) # Assume one stop can cover users within 500 m (L1 distance).
