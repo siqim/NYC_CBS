@@ -19,9 +19,102 @@ from pyclustering.cluster.center_initializer import kmeans_plusplus_initializer
 from pyclustering.utils.metric import type_metric, distance_metric
 
 import folium
-from a_color_brewer import color_brewer
+from color_brewer import color_brewer
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+def visz_merged_stops(coords, labels, potential_stops, thres=100):
+
+    palette = color_brewer('YlGnBu', len(set(labels)))
+    uniq_labels = np.unique(labels)
+
+    m = folium.Map(
+        location=[40.686892, -73.9876514],
+        tiles='cartodbdark_matter',
+        zoom_start=12
+    )
+
+    for cluster in set(labels):
+        if cluster != -1:
+            temp_coords = coords[np.argwhere(labels == cluster)].squeeze()
+            coord_Os = np.array([utm.to_latlon(each[0], each[1], 18, 'T')\
+                                 for each in temp_coords[:, :2]])
+            coord_Ds = np.array([utm.to_latlon(each[0], each[1], 18, 'T')\
+                                 for each in temp_coords[:, 2:]])
+
+            O_hull = coord_Os[ConvexHull(coord_Os).vertices]
+            O_hull = np.concatenate((O_hull, O_hull[[0]]), axis=0)
+
+            D_hull = coord_Ds[ConvexHull(coord_Ds).vertices]
+            D_hull = np.concatenate((D_hull, D_hull[[0]]), axis=0)
+
+            cluster_idx = np.argwhere(cluster==uniq_labels).squeeze()
+            folium.PolyLine(
+                locations=O_hull,
+                color=palette[cluster_idx],
+                popup='Origin Convex Hull ' + str(cluster),
+                weight=1
+                ).add_to(m)
+
+            folium.PolyLine(
+                locations=D_hull,
+                color=palette[cluster_idx],
+                popup='Destination Convex Hull ' + str(cluster),
+                weight=1
+                ).add_to(m)
+
+    for stop_id, stop_loc in potential_stops.items():
+
+        if stop_id != 0:
+            stop_latlon = utm.to_latlon(stop_loc[:, 0], stop_loc[:, 1], 18, 'T')
+
+            folium.Circle(
+                radius=thres,
+                location=stop_latlon,
+                color='lightblue',
+                fill=True,
+                fill_color='lightblue',
+                popup='Stop id %d'%stop_id
+            ).add_to(m)
+
+    m.save('merged_stops.html')
+
+def merge_stops(potential_stops_with_id, thres=100, metric='l1'):
+    merged_potential_stops_with_id = {}
+    merged_potential_stops_with_id[0] = 'DUMMY_STOP'
+
+    potential_stops = np.stack(list(potential_stops_with_id.values())).squeeze()
+
+    dist_mat = pairwise_distances(potential_stops, metric=metric)
+    dist_mat[dist_mat==0] = np.inf
+
+
+    while np.min(dist_mat) < thres:
+
+        mask = np.ones(potential_stops.shape[0])
+        for idx_i, loc_i in enumerate(potential_stops):
+            for idx_j, loc_j in enumerate(potential_stops):
+
+                if idx_j > idx_i:
+                    dist = pairwise_distances(loc_i.reshape(1,-1), loc_j.reshape(1,-1), metric=metric).reshape(-1)
+
+#                    print(dist)
+                    if dist < thres:
+
+                        merged_loc = ((loc_i + loc_j) / 2).reshape(1, -1)
+                        mask[idx_i] = 0
+                        mask[idx_j] = 0
+                        potential_stops = np.concatenate((potential_stops[mask==1], merged_loc), axis=0)
+                        break
+            if dist < thres:
+                break
+
+        dist_mat = pairwise_distances(potential_stops, metric=metric)
+        dist_mat[dist_mat==0] = np.inf
+
+    merged_potential_stops_with_id.update({i:potential_stops[i-1].reshape(1, -1) for i in range(1, len(potential_stops)+1)})
+
+    return merged_potential_stops_with_id
 
 
 def visz_stops_and_convexhull(coords, labels, potential_stops):
@@ -77,7 +170,7 @@ def visz_stops_and_convexhull(coords, labels, potential_stops):
 
                 for stop in stop_latlons:
                     folium.Circle(
-                        radius=20,
+                        radius=100,
                         location=stop,
                         color=palette[cluster_idx],
                         fill=True,
@@ -93,7 +186,7 @@ def visz_stops_and_convexhull(coords, labels, potential_stops):
 
                 for stop in stop_latlons:
                     folium.Circle(
-                        radius=20,
+                        radius=100,
                         location=stop,
                         color=palette[cluster_idx],
                         fill=True,
@@ -103,9 +196,9 @@ def visz_stops_and_convexhull(coords, labels, potential_stops):
 
     m.save('stops_and_convexhull.html')
 
-    potential_stops = {i:all_potential_stops[i-1].reshape(1, -1) for i in range(1, len(all_potential_stops)+1)}
+    potential_stops = {i:all_potential_stops[i].reshape(1, -1) for i in range(0, len(all_potential_stops))}
 
-    potential_stops[0] = 'DUMMY_STOPS'
+#    potential_stops[0] = 'DUMMY_STOPS'
 
     return potential_stops
 
@@ -311,7 +404,7 @@ def cluster_map_visz(coords, labels, show_noise=False, show_od=False, only_o=Fal
 
 
 def cluster_visz(clusters, coords):
-    """For visualizing canopy clustering results.
+    """For visualizing canopy clustering results. Deprecated since now uses DBSCAN.
         Params:
             clusters: list[{'c': idx, 'points': list[idx]}]
 

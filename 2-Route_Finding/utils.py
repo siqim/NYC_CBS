@@ -55,7 +55,7 @@ def dist_mat_potential_stops(dist_time_mat_filename, potential_stops_with_id, ke
     dist_mat = np.zeros((num_stops, num_stops))
     time_mat = np.zeros((num_stops, num_stops))
     for i in trange(num_stops, desc='1st loop'):
-        for j in trange(num_stops, desc='2nd loop', leave=False):
+        for j in range(num_stops):
             if j > i and j != 0 and i != 0:
                 time_dist_dict = gmaps.distance_matrix(origins=latlon[i],
                                                  destinations=latlon[j],
@@ -138,6 +138,34 @@ def get_worst_time_window(pick_up_space_time_window, drop_off_space_time_window)
 
     return [min_p, max_d]
 
+#def get_A_O(pick_up_space_time_window, worst_time_window, stop_time_mat, candidate_drop_off_loc):
+#    if worst_time_window == -1:
+#        return []
+#
+#    A_O = []
+#    latest = worst_time_window[1]
+#    for i, t in pick_up_space_time_window:
+#        for j in range(1, stop_time_mat.shape[0]):
+#            s = t + stop_time_mat[i, j]
+#            delta = np.min([stop_time_mat[j, each_dropoff] for each_dropoff in candidate_drop_off_loc])
+#            if s + delta <= latest and t!=s:
+#                A_O.append([i,j,t,s])
+#    return A_O
+#
+#def get_A_D(drop_off_space_time_window, worst_time_window, stop_time_mat, candidate_pick_up_loc):
+#    if worst_time_window == -1:
+#        return []
+#
+#    A_D = []
+#    earliest = worst_time_window[0]
+#    for j, s in drop_off_space_time_window:
+#        for i in range(1, stop_time_mat.shape[0]):
+#            t = s - stop_time_mat[i, j]
+#            delta = np.min([stop_time_mat[each_pickup, i] for each_pickup in candidate_pick_up_loc])
+#            if t - delta >= earliest and t!=s:
+#                A_D.append([i,j,t,s])
+#    return A_D
+
 def get_A_O(pick_up_space_time_window, worst_time_window, stop_time_mat, candidate_drop_off_loc):
     if worst_time_window == -1:
         return []
@@ -147,8 +175,7 @@ def get_A_O(pick_up_space_time_window, worst_time_window, stop_time_mat, candida
     for i, t in pick_up_space_time_window:
         for j in range(1, stop_time_mat.shape[0]):
             s = t + stop_time_mat[i, j]
-            delta = np.min([stop_time_mat[j, each_dropoff] for each_dropoff in candidate_drop_off_loc])
-            if s + delta <= latest and t!=s:
+            if s  <= latest and s>t:
                 A_O.append([i,j,t,s])
     return A_O
 
@@ -161,8 +188,7 @@ def get_A_D(drop_off_space_time_window, worst_time_window, stop_time_mat, candid
     for j, s in drop_off_space_time_window:
         for i in range(1, stop_time_mat.shape[0]):
             t = s - stop_time_mat[i, j]
-            delta = np.min([stop_time_mat[each_pickup, i] for each_pickup in candidate_pick_up_loc])
-            if t - delta >= earliest and t!=s:
+            if t  >= earliest and s>t:
                 A_D.append([i,j,t,s])
     return A_D
 
