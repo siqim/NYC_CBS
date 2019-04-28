@@ -77,7 +77,7 @@ def visz_merged_stops(coords, labels, potential_stops, thres=100):
                 popup='Stop id %d'%stop_id
             ).add_to(m)
 
-    m.save('merged_stops.html')
+    m.save('../merged_stops.html')
 
 def merge_stops(potential_stops_with_id, thres=100, metric='l1'):
     merged_potential_stops_with_id = {}
@@ -194,7 +194,7 @@ def visz_stops_and_convexhull(coords, labels, potential_stops):
                         popup='Destination ' + str(cluster) + ' k=' + str(k)
                     ).add_to(m)
 
-    m.save('stops_and_convexhull.html')
+    m.save('../stops_and_convexhull.html')
 
     potential_stops = {i:all_potential_stops[i].reshape(1, -1) for i in range(0, len(all_potential_stops))}
 
@@ -400,7 +400,7 @@ def cluster_map_visz(coords, labels, show_noise=False, show_od=False, only_o=Fal
                     popup='Distance %.2f m' % dist
                 ).add_to(m)
 
-    m.save('cluster_map.html')
+    m.save('../cluster_map.html')
 
 
 def cluster_visz(clusters, coords):
