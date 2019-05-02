@@ -36,7 +36,7 @@ class Optim(object):
         self.all_x = [(p, k) for p in self.P for k in self.K]
         self.all_y = [(i,j,t,s,k) for k in self.K for i,j,t,s in self.A]
 
-    def build_model(self, threads=4, timelimit=10*3600, mip=0):
+    def build_model(self, threads=4, timelimit=10*60, mip=0):
         self.start_0 = time.time()
         print('Creating model and variables...')
         self.mdl = Model(name='CB-Planning_%d'%self.model_id)
@@ -49,7 +49,7 @@ class Optim(object):
 
         print('Creating objective...')
         self.mdl.maximize( self.mdl.sum(self.x[p,k] * self._dist(p,k) * self.rho for p in self.P for k in self.K if k!=0)
-                         - self.mdl.sum(self.y[i,j,s,t,k] * self.data.stop_dist_mat[i,j] * self.gamma for k in self.K for i,j,s,t in self.A if k!=0) )
+                         - self.mdl.sum(self.y[i,j,t,s,k] * self.data.stop_dist_mat[i,j] * self.gamma for k in self.K for i,j,t,s in self.A if k!=0) )
         end_0 = time.time()
         print('[%.2f] min used for building the model.' % ((end_0-self.start_0)/60))
 
