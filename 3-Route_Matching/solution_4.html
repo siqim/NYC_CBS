@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script>L_PREFER_CANVAS=false; L_NO_TOUCH=false; L_DISABLE_3D=false;</script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.3.4/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.3.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+    <meta name="viewport" content="width=device-width,
+        initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>#map_1a52a35fdea44c92b0177029ef25cd52 {
+        position: relative;
+        width: 100.0%;
+        height: 100.0%;
+        left: 0.0%;
+        top: 0.0%;
+        }
+    </style>
+</head>
+<body>    
+    
+    <div class="folium-map" id="map_1a52a35fdea44c92b0177029ef25cd52" ></div>
+</body>
+<script>    
+    
+    
+        var bounds = null;
+    
+
+    var map_1a52a35fdea44c92b0177029ef25cd52 = L.map(
+        'map_1a52a35fdea44c92b0177029ef25cd52', {
+        center: [40.686892, -73.9876514],
+        zoom: 12,
+        maxBounds: bounds,
+        layers: [],
+        worldCopyJump: false,
+        crs: L.CRS.EPSG3857,
+        zoomControl: true,
+        });
+
+    
+    
+    var tile_layer_a33e1f3661c5470e959b8e43361295ae = L.tileLayer(
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+        {
+        "attribution": null,
+        "detectRetina": false,
+        "maxNativeZoom": 18,
+        "maxZoom": 18,
+        "minZoom": 0,
+        "noWrap": false,
+        "opacity": 1,
+        "subdomains": "abc",
+        "tms": false
+}).addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+    
+                var poly_line_0b923971e51145baaa2be0480e238c3b = L.polyline(
+                    [[40.755760195051366, -73.99074165158186], [40.756246385246676, -73.99001832898837]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_c289863622d84bf2a53412fdf790e9e3 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_4a58f8d02b3e4ef399d59d80197d7b36 = $(`<div id="html_4a58f8d02b3e4ef399d59d80197d7b36" style="width: 100.0%; height: 100.0%;">Start Time 72, End Time 77, Travel Time 5.00 min</div>`)[0];
+                popup_c289863622d84bf2a53412fdf790e9e3.setContent(html_4a58f8d02b3e4ef399d59d80197d7b36);
+            
+
+            poly_line_0b923971e51145baaa2be0480e238c3b.bindPopup(popup_c289863622d84bf2a53412fdf790e9e3)
+            ;
+
+            
+        
+    
+
+            var circle_d30a87c49d174245a0a34c9473c87297 = L.circle(
+                [40.755760195051366, -73.99074165158186],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_3c4731f913ff4568966b61acdef00c9b = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_248dfe06435a4b6ebbf64b21614e0bc9 = $(`<div id="html_248dfe06435a4b6ebbf64b21614e0bc9" style="width: 100.0%; height: 100.0%;">Stop id 10, Time 72</div>`)[0];
+                popup_3c4731f913ff4568966b61acdef00c9b.setContent(html_248dfe06435a4b6ebbf64b21614e0bc9);
+            
+
+            circle_d30a87c49d174245a0a34c9473c87297.bindPopup(popup_3c4731f913ff4568966b61acdef00c9b)
+            ;
+
+            
+        
+    
+
+            var circle_1d93caee2fc448eeb14b01813a445713 = L.circle(
+                [40.756246385246676, -73.99001832898837],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_bbfa0977d646491791eaba5ef11793db = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_42b03a9a76f84556906437b9492d9cf2 = $(`<div id="html_42b03a9a76f84556906437b9492d9cf2" style="width: 100.0%; height: 100.0%;">Stop id 10, Time 77</div>`)[0];
+                popup_bbfa0977d646491791eaba5ef11793db.setContent(html_42b03a9a76f84556906437b9492d9cf2);
+            
+
+            circle_1d93caee2fc448eeb14b01813a445713.bindPopup(popup_bbfa0977d646491791eaba5ef11793db)
+            ;
+
+            
+        
+    
+                var poly_line_a76b3ceddaaa4e74a72fdf57970280f6 = L.polyline(
+                    [[40.756246385246676, -73.99001832898837], [40.756246385246676, -73.99001832898837]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_56c302f9f2bd450b84c2470688a1cd7b = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_583d71241d2e4d909db30b8219b0577b = $(`<div id="html_583d71241d2e4d909db30b8219b0577b" style="width: 100.0%; height: 100.0%;">Start Time 77, End Time 80, Travel Time 3.00 min</div>`)[0];
+                popup_56c302f9f2bd450b84c2470688a1cd7b.setContent(html_583d71241d2e4d909db30b8219b0577b);
+            
+
+            poly_line_a76b3ceddaaa4e74a72fdf57970280f6.bindPopup(popup_56c302f9f2bd450b84c2470688a1cd7b)
+            ;
+
+            
+        
+    
+
+            var circle_c5af8327cc604b9f870933098d8e507c = L.circle(
+                [40.756246385246676, -73.99001832898837],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_e9d9eaf4db4c4ed6a35975aa864bb443 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_dfd2b2215d5542aba0dddb5b75c5bcbc = $(`<div id="html_dfd2b2215d5542aba0dddb5b75c5bcbc" style="width: 100.0%; height: 100.0%;">Stop id 3, Time 77</div>`)[0];
+                popup_e9d9eaf4db4c4ed6a35975aa864bb443.setContent(html_dfd2b2215d5542aba0dddb5b75c5bcbc);
+            
+
+            circle_c5af8327cc604b9f870933098d8e507c.bindPopup(popup_e9d9eaf4db4c4ed6a35975aa864bb443)
+            ;
+
+            
+        
+    
+
+            var circle_5fe4da043b1843759bf5d547c434021d = L.circle(
+                [40.756246385246676, -73.99001832898837],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_6819218015584f17b83cca66eaa664b1 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_ed534303636a4050b624b31b0db99109 = $(`<div id="html_ed534303636a4050b624b31b0db99109" style="width: 100.0%; height: 100.0%;">Stop id 3, Time 80</div>`)[0];
+                popup_6819218015584f17b83cca66eaa664b1.setContent(html_ed534303636a4050b624b31b0db99109);
+            
+
+            circle_5fe4da043b1843759bf5d547c434021d.bindPopup(popup_6819218015584f17b83cca66eaa664b1)
+            ;
+
+            
+        
+    
+                var poly_line_9590f471a0984078b5ce7b25ccf90bdd = L.polyline(
+                    [[40.756246385246676, -73.99001832898837], [40.758674031076275, -73.9782905822845]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_4548f1332f7c4f819c9d094df37c7a5d = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_d091df4b9dd549b191402ed5a06b5718 = $(`<div id="html_d091df4b9dd549b191402ed5a06b5718" style="width: 100.0%; height: 100.0%;">Start Time 80, End Time 88, Travel Time 8.00 min</div>`)[0];
+                popup_4548f1332f7c4f819c9d094df37c7a5d.setContent(html_d091df4b9dd549b191402ed5a06b5718);
+            
+
+            poly_line_9590f471a0984078b5ce7b25ccf90bdd.bindPopup(popup_4548f1332f7c4f819c9d094df37c7a5d)
+            ;
+
+            
+        
+    
+
+            var circle_49fc7e5d15bb4780b0faba529d5b8cdc = L.circle(
+                [40.756246385246676, -73.99001832898837],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_908f7657cd5f47079d45185bfe27faf4 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_0f67185936454e59af9ca67aee15e36b = $(`<div id="html_0f67185936454e59af9ca67aee15e36b" style="width: 100.0%; height: 100.0%;">Stop id 3, Time 80</div>`)[0];
+                popup_908f7657cd5f47079d45185bfe27faf4.setContent(html_0f67185936454e59af9ca67aee15e36b);
+            
+
+            circle_49fc7e5d15bb4780b0faba529d5b8cdc.bindPopup(popup_908f7657cd5f47079d45185bfe27faf4)
+            ;
+
+            
+        
+    
+
+            var circle_18a0c0f209464bc78f627d04c9b5617f = L.circle(
+                [40.758674031076275, -73.9782905822845],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_c0d22785ed6e4674a5ff5e2ba6d197b1 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_5cf33f4e4ec14447820c31b995c44efd = $(`<div id="html_5cf33f4e4ec14447820c31b995c44efd" style="width: 100.0%; height: 100.0%;">Stop id 3, Time 88</div>`)[0];
+                popup_c0d22785ed6e4674a5ff5e2ba6d197b1.setContent(html_5cf33f4e4ec14447820c31b995c44efd);
+            
+
+            circle_18a0c0f209464bc78f627d04c9b5617f.bindPopup(popup_c0d22785ed6e4674a5ff5e2ba6d197b1)
+            ;
+
+            
+        
+    
+                var poly_line_1f200a3695904e81b776ce8ae76578c7 = L.polyline(
+                    [[40.758674031076275, -73.9782905822845], [40.758674031076275, -73.9782905822845]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_17ab81bbbb0042af83727fb81cb539a0 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_a120b548f1a44887ab4f249d3b669ed5 = $(`<div id="html_a120b548f1a44887ab4f249d3b669ed5" style="width: 100.0%; height: 100.0%;">Start Time 88, End Time 89, Travel Time 1.00 min</div>`)[0];
+                popup_17ab81bbbb0042af83727fb81cb539a0.setContent(html_a120b548f1a44887ab4f249d3b669ed5);
+            
+
+            poly_line_1f200a3695904e81b776ce8ae76578c7.bindPopup(popup_17ab81bbbb0042af83727fb81cb539a0)
+            ;
+
+            
+        
+    
+
+            var circle_f0c23aa2ede14147a022aeb12dd8f568 = L.circle(
+                [40.758674031076275, -73.9782905822845],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_70756d362b574079a542389a3176bdbe = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_750249ba75254e7f98271c67a6fce981 = $(`<div id="html_750249ba75254e7f98271c67a6fce981" style="width: 100.0%; height: 100.0%;">Stop id 4, Time 88</div>`)[0];
+                popup_70756d362b574079a542389a3176bdbe.setContent(html_750249ba75254e7f98271c67a6fce981);
+            
+
+            circle_f0c23aa2ede14147a022aeb12dd8f568.bindPopup(popup_70756d362b574079a542389a3176bdbe)
+            ;
+
+            
+        
+    
+
+            var circle_26d319157cdb461081ea77e1b50cc014 = L.circle(
+                [40.758674031076275, -73.9782905822845],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_06412081ba5545dbb90a04b968606f35 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_33ac82eaddfc4d0c92b19cb781e152a4 = $(`<div id="html_33ac82eaddfc4d0c92b19cb781e152a4" style="width: 100.0%; height: 100.0%;">Stop id 4, Time 89</div>`)[0];
+                popup_06412081ba5545dbb90a04b968606f35.setContent(html_33ac82eaddfc4d0c92b19cb781e152a4);
+            
+
+            circle_26d319157cdb461081ea77e1b50cc014.bindPopup(popup_06412081ba5545dbb90a04b968606f35)
+            ;
+
+            
+        
+    
+                var poly_line_e906bf37e43b40308fa140358cf312be = L.polyline(
+                    [[40.758674031076275, -73.9782905822845], [40.75813637570249, -73.97623869707151]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_6448fa8107954eb195545b006b083ef0 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_580556550ac24500938e203177fd6a12 = $(`<div id="html_580556550ac24500938e203177fd6a12" style="width: 100.0%; height: 100.0%;">Start Time 89, End Time 90, Travel Time 1.00 min</div>`)[0];
+                popup_6448fa8107954eb195545b006b083ef0.setContent(html_580556550ac24500938e203177fd6a12);
+            
+
+            poly_line_e906bf37e43b40308fa140358cf312be.bindPopup(popup_6448fa8107954eb195545b006b083ef0)
+            ;
+
+            
+        
+    
+
+            var circle_7610b31a4a964158b1ea60fe624e9e67 = L.circle(
+                [40.758674031076275, -73.9782905822845],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_42a4839b6476441b9e512d1adee9e167 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_dbfd349599d948739c360084af0d2892 = $(`<div id="html_dbfd349599d948739c360084af0d2892" style="width: 100.0%; height: 100.0%;">Stop id 4, Time 89</div>`)[0];
+                popup_42a4839b6476441b9e512d1adee9e167.setContent(html_dbfd349599d948739c360084af0d2892);
+            
+
+            circle_7610b31a4a964158b1ea60fe624e9e67.bindPopup(popup_42a4839b6476441b9e512d1adee9e167)
+            ;
+
+            
+        
+    
+
+            var circle_8607e18bd48a4656a79b8dfd5c3810e0 = L.circle(
+                [40.75813637570249, -73.97623869707151],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_da44cd57fea743f68bfad8b6b8d5e2c2 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_4c2fdcf1fd6d4abaa24758637a3b8e58 = $(`<div id="html_4c2fdcf1fd6d4abaa24758637a3b8e58" style="width: 100.0%; height: 100.0%;">Stop id 4, Time 90</div>`)[0];
+                popup_da44cd57fea743f68bfad8b6b8d5e2c2.setContent(html_4c2fdcf1fd6d4abaa24758637a3b8e58);
+            
+
+            circle_8607e18bd48a4656a79b8dfd5c3810e0.bindPopup(popup_da44cd57fea743f68bfad8b6b8d5e2c2)
+            ;
+
+            
+        
+    
+                var poly_line_0a68df9fc0414973bd605d43807cac78 = L.polyline(
+                    [[40.75813637570249, -73.97623869707151], [40.758532748615345, -73.97417490048151]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_7a837bb7f18840eb9c7d2708de7dfc52 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_c9aa396ec1084f3c924b6c6f7dea6407 = $(`<div id="html_c9aa396ec1084f3c924b6c6f7dea6407" style="width: 100.0%; height: 100.0%;">Start Time 90, End Time 91, Travel Time 1.00 min</div>`)[0];
+                popup_7a837bb7f18840eb9c7d2708de7dfc52.setContent(html_c9aa396ec1084f3c924b6c6f7dea6407);
+            
+
+            poly_line_0a68df9fc0414973bd605d43807cac78.bindPopup(popup_7a837bb7f18840eb9c7d2708de7dfc52)
+            ;
+
+            
+        
+    
+
+            var circle_0af464485dbf4ed5b7b4c49286992eb8 = L.circle(
+                [40.75813637570249, -73.97623869707151],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_96aeb1a5ffcc4ba8ba7b553d25360229 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_4b4599a5814847e99982fbcd378df890 = $(`<div id="html_4b4599a5814847e99982fbcd378df890" style="width: 100.0%; height: 100.0%;">Stop id 5, Time 90</div>`)[0];
+                popup_96aeb1a5ffcc4ba8ba7b553d25360229.setContent(html_4b4599a5814847e99982fbcd378df890);
+            
+
+            circle_0af464485dbf4ed5b7b4c49286992eb8.bindPopup(popup_96aeb1a5ffcc4ba8ba7b553d25360229)
+            ;
+
+            
+        
+    
+
+            var circle_9d2bc7dbc0204edcb486afd927907019 = L.circle(
+                [40.758532748615345, -73.97417490048151],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_5998db74765a4d02a649a6603d876dd4 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_259dbfab84504d6dbdee5e8d5e7f66da = $(`<div id="html_259dbfab84504d6dbdee5e8d5e7f66da" style="width: 100.0%; height: 100.0%;">Stop id 5, Time 91</div>`)[0];
+                popup_5998db74765a4d02a649a6603d876dd4.setContent(html_259dbfab84504d6dbdee5e8d5e7f66da);
+            
+
+            circle_9d2bc7dbc0204edcb486afd927907019.bindPopup(popup_5998db74765a4d02a649a6603d876dd4)
+            ;
+
+            
+        
+    
+                var poly_line_95ac922265b845199955d9e53245b4ee = L.polyline(
+                    [[40.758532748615345, -73.97417490048151], [40.74787112732353, -73.98033066222663]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_8dc838d0fb68429ea416dfd743700600 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_c9e6ca4ea0e8411c8e58696076fb122c = $(`<div id="html_c9e6ca4ea0e8411c8e58696076fb122c" style="width: 100.0%; height: 100.0%;">Start Time 91, End Time 103, Travel Time 12.00 min</div>`)[0];
+                popup_8dc838d0fb68429ea416dfd743700600.setContent(html_c9e6ca4ea0e8411c8e58696076fb122c);
+            
+
+            poly_line_95ac922265b845199955d9e53245b4ee.bindPopup(popup_8dc838d0fb68429ea416dfd743700600)
+            ;
+
+            
+        
+    
+
+            var circle_e21e166a4a67482195657ab1c4894493 = L.circle(
+                [40.758532748615345, -73.97417490048151],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_f42d6596f105408a9fb9a94545fc8935 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_31413f34b39749e7b101c3c8247b1920 = $(`<div id="html_31413f34b39749e7b101c3c8247b1920" style="width: 100.0%; height: 100.0%;">Stop id 26, Time 91</div>`)[0];
+                popup_f42d6596f105408a9fb9a94545fc8935.setContent(html_31413f34b39749e7b101c3c8247b1920);
+            
+
+            circle_e21e166a4a67482195657ab1c4894493.bindPopup(popup_f42d6596f105408a9fb9a94545fc8935)
+            ;
+
+            
+        
+    
+
+            var circle_f468c9c0e2af4425aa14a4381a36e78f = L.circle(
+                [40.74787112732353, -73.98033066222663],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_8d1b091906da4a6bae61f1735aca88a9 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_3c6392c2fbb942c388e9cf48e3e3bca2 = $(`<div id="html_3c6392c2fbb942c388e9cf48e3e3bca2" style="width: 100.0%; height: 100.0%;">Stop id 26, Time 103</div>`)[0];
+                popup_8d1b091906da4a6bae61f1735aca88a9.setContent(html_3c6392c2fbb942c388e9cf48e3e3bca2);
+            
+
+            circle_f468c9c0e2af4425aa14a4381a36e78f.bindPopup(popup_8d1b091906da4a6bae61f1735aca88a9)
+            ;
+
+            
+        
+    
+                var poly_line_4ffb2c1bd92e4d6e9c150b7ad6152c4d = L.polyline(
+                    [[40.74787112732353, -73.98033066222663], [40.74669764609291, -73.98063205401313]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_e59e09a430154beeb870f09f2a44ad03 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_1e256aa9c6564a1b9380e18f9649d356 = $(`<div id="html_1e256aa9c6564a1b9380e18f9649d356" style="width: 100.0%; height: 100.0%;">Start Time 103, End Time 105, Travel Time 2.00 min</div>`)[0];
+                popup_e59e09a430154beeb870f09f2a44ad03.setContent(html_1e256aa9c6564a1b9380e18f9649d356);
+            
+
+            poly_line_4ffb2c1bd92e4d6e9c150b7ad6152c4d.bindPopup(popup_e59e09a430154beeb870f09f2a44ad03)
+            ;
+
+            
+        
+    
+
+            var circle_136e120e63e8404fa80bf0f82180672b = L.circle(
+                [40.74787112732353, -73.98033066222663],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_9d084b2be7e645508828b80651265a49 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_c37d9c1b6cb04e6e8b2eb25a70ef4cbf = $(`<div id="html_c37d9c1b6cb04e6e8b2eb25a70ef4cbf" style="width: 100.0%; height: 100.0%;">Stop id 23, Time 103</div>`)[0];
+                popup_9d084b2be7e645508828b80651265a49.setContent(html_c37d9c1b6cb04e6e8b2eb25a70ef4cbf);
+            
+
+            circle_136e120e63e8404fa80bf0f82180672b.bindPopup(popup_9d084b2be7e645508828b80651265a49)
+            ;
+
+            
+        
+    
+
+            var circle_6fa7b830a7bf4b93ab366e255e213135 = L.circle(
+                [40.74669764609291, -73.98063205401313],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_f4980488dde444f185fbdd104c5dc964 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_a9cf0ec13c3d4cf78d1ba3eb37e0ba46 = $(`<div id="html_a9cf0ec13c3d4cf78d1ba3eb37e0ba46" style="width: 100.0%; height: 100.0%;">Stop id 23, Time 105</div>`)[0];
+                popup_f4980488dde444f185fbdd104c5dc964.setContent(html_a9cf0ec13c3d4cf78d1ba3eb37e0ba46);
+            
+
+            circle_6fa7b830a7bf4b93ab366e255e213135.bindPopup(popup_f4980488dde444f185fbdd104c5dc964)
+            ;
+
+            
+        
+    
+                var poly_line_ed4a80a99eac4fbe95e939c0b6b84e7c = L.polyline(
+                    [[40.74669764609291, -73.98063205401313], [40.74669764609291, -73.98063205401313]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_acb6019e873a4a9a9ccf8baba89f71d1 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_10389f1296d74846a34d42411ef872a3 = $(`<div id="html_10389f1296d74846a34d42411ef872a3" style="width: 100.0%; height: 100.0%;">Start Time 105, End Time 112, Travel Time 7.00 min</div>`)[0];
+                popup_acb6019e873a4a9a9ccf8baba89f71d1.setContent(html_10389f1296d74846a34d42411ef872a3);
+            
+
+            poly_line_ed4a80a99eac4fbe95e939c0b6b84e7c.bindPopup(popup_acb6019e873a4a9a9ccf8baba89f71d1)
+            ;
+
+            
+        
+    
+
+            var circle_f9fe0d23733e48209ef6a5d3710d19c3 = L.circle(
+                [40.74669764609291, -73.98063205401313],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_2442befffbc24c53a323e47bbb173a86 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_f87dbd2035fa40f8b341fa39440ecbc7 = $(`<div id="html_f87dbd2035fa40f8b341fa39440ecbc7" style="width: 100.0%; height: 100.0%;">Stop id 25, Time 105</div>`)[0];
+                popup_2442befffbc24c53a323e47bbb173a86.setContent(html_f87dbd2035fa40f8b341fa39440ecbc7);
+            
+
+            circle_f9fe0d23733e48209ef6a5d3710d19c3.bindPopup(popup_2442befffbc24c53a323e47bbb173a86)
+            ;
+
+            
+        
+    
+
+            var circle_380d2a3ae8904a7082cb8aa3e537a84a = L.circle(
+                [40.74669764609291, -73.98063205401313],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_f3763e90796e4b24b60276b92510d626 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_34ae86410c154fd9a1d8837768c47e16 = $(`<div id="html_34ae86410c154fd9a1d8837768c47e16" style="width: 100.0%; height: 100.0%;">Stop id 25, Time 112</div>`)[0];
+                popup_f3763e90796e4b24b60276b92510d626.setContent(html_34ae86410c154fd9a1d8837768c47e16);
+            
+
+            circle_380d2a3ae8904a7082cb8aa3e537a84a.bindPopup(popup_f3763e90796e4b24b60276b92510d626)
+            ;
+
+            
+        
+    
+                var poly_line_fea4a979134a49008d976cfc5374f81b = L.polyline(
+                    [[40.74669764609291, -73.98063205401313], [40.75844661299791, -73.97225077173412]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_61ed4deadb024ae8993d7b6e190ff7d5 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_fe5308f0115946b39eb6550d44a36d78 = $(`<div id="html_fe5308f0115946b39eb6550d44a36d78" style="width: 100.0%; height: 100.0%;">Start Time 112, End Time 118, Travel Time 6.00 min</div>`)[0];
+                popup_61ed4deadb024ae8993d7b6e190ff7d5.setContent(html_fe5308f0115946b39eb6550d44a36d78);
+            
+
+            poly_line_fea4a979134a49008d976cfc5374f81b.bindPopup(popup_61ed4deadb024ae8993d7b6e190ff7d5)
+            ;
+
+            
+        
+    
+
+            var circle_1e6f495d1b954b44be5867f42fbbbd7e = L.circle(
+                [40.74669764609291, -73.98063205401313],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_fb47730a51f74f4bb321dddf05cbc535 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_d581dc271d6947b1a2abce3c76f7c5a4 = $(`<div id="html_d581dc271d6947b1a2abce3c76f7c5a4" style="width: 100.0%; height: 100.0%;">Stop id 25, Time 112</div>`)[0];
+                popup_fb47730a51f74f4bb321dddf05cbc535.setContent(html_d581dc271d6947b1a2abce3c76f7c5a4);
+            
+
+            circle_1e6f495d1b954b44be5867f42fbbbd7e.bindPopup(popup_fb47730a51f74f4bb321dddf05cbc535)
+            ;
+
+            
+        
+    
+
+            var circle_996b5aab928c4442a1f4e0a88be4f606 = L.circle(
+                [40.75844661299791, -73.97225077173412],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_a3324118e9054c9cbf7bddbdba20d23f = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_4106b48e6cb143bba03d6a24bb2672a7 = $(`<div id="html_4106b48e6cb143bba03d6a24bb2672a7" style="width: 100.0%; height: 100.0%;">Stop id 25, Time 118</div>`)[0];
+                popup_a3324118e9054c9cbf7bddbdba20d23f.setContent(html_4106b48e6cb143bba03d6a24bb2672a7);
+            
+
+            circle_996b5aab928c4442a1f4e0a88be4f606.bindPopup(popup_a3324118e9054c9cbf7bddbdba20d23f)
+            ;
+
+            
+        
+    
+                var poly_line_b34e052cc42746d6b4055ce6e921cfa3 = L.polyline(
+                    [[40.75844661299791, -73.97225077173412], [40.749191292334125, -73.97999158330887]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_acf8cab87bae4212b2fdc980e27ec13a = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_5eb530ca8e834163995812499a9468ea = $(`<div id="html_5eb530ca8e834163995812499a9468ea" style="width: 100.0%; height: 100.0%;">Start Time 118, End Time 138, Travel Time 20.00 min</div>`)[0];
+                popup_acf8cab87bae4212b2fdc980e27ec13a.setContent(html_5eb530ca8e834163995812499a9468ea);
+            
+
+            poly_line_b34e052cc42746d6b4055ce6e921cfa3.bindPopup(popup_acf8cab87bae4212b2fdc980e27ec13a)
+            ;
+
+            
+        
+    
+
+            var circle_57be6b34647a4e48b235c96bc700436a = L.circle(
+                [40.75844661299791, -73.97225077173412],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_14b5792fd3c24e95b8eabdc4eab24d64 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_d53dbb0795c841c68e2f6513eb6a9076 = $(`<div id="html_d53dbb0795c841c68e2f6513eb6a9076" style="width: 100.0%; height: 100.0%;">Stop id 21, Time 118</div>`)[0];
+                popup_14b5792fd3c24e95b8eabdc4eab24d64.setContent(html_d53dbb0795c841c68e2f6513eb6a9076);
+            
+
+            circle_57be6b34647a4e48b235c96bc700436a.bindPopup(popup_14b5792fd3c24e95b8eabdc4eab24d64)
+            ;
+
+            
+        
+    
+
+            var circle_aae127ce9e414682abb2b744cd71aa18 = L.circle(
+                [40.749191292334125, -73.97999158330887],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_7cc9df91b31c4f8db8a3081a5150108c = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_70809b4c87ba4788aded5305640b7c64 = $(`<div id="html_70809b4c87ba4788aded5305640b7c64" style="width: 100.0%; height: 100.0%;">Stop id 21, Time 138</div>`)[0];
+                popup_7cc9df91b31c4f8db8a3081a5150108c.setContent(html_70809b4c87ba4788aded5305640b7c64);
+            
+
+            circle_aae127ce9e414682abb2b744cd71aa18.bindPopup(popup_7cc9df91b31c4f8db8a3081a5150108c)
+            ;
+
+            
+        
+    
+                var poly_line_240c23b6cf564d1fb9434e1a38bb09ae = L.polyline(
+                    [[40.749191292334125, -73.97999158330887], [40.75654766283489, -73.97794415373204]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_e5ae8f1375d549f99624dafc4d89fceb = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_4558e83e84a34ec8ad26e4a06523bf1b = $(`<div id="html_4558e83e84a34ec8ad26e4a06523bf1b" style="width: 100.0%; height: 100.0%;">Start Time 138, End Time 143, Travel Time 5.00 min</div>`)[0];
+                popup_e5ae8f1375d549f99624dafc4d89fceb.setContent(html_4558e83e84a34ec8ad26e4a06523bf1b);
+            
+
+            poly_line_240c23b6cf564d1fb9434e1a38bb09ae.bindPopup(popup_e5ae8f1375d549f99624dafc4d89fceb)
+            ;
+
+            
+        
+    
+
+            var circle_2c8e0ae60da047cdb19fadb47d9ecf3f = L.circle(
+                [40.749191292334125, -73.97999158330887],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_b5a257a8e1a64d159ed08737cbd7ee14 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_8622c821a6da45fa81e3bda6ebf71bbd = $(`<div id="html_8622c821a6da45fa81e3bda6ebf71bbd" style="width: 100.0%; height: 100.0%;">Stop id 24, Time 138</div>`)[0];
+                popup_b5a257a8e1a64d159ed08737cbd7ee14.setContent(html_8622c821a6da45fa81e3bda6ebf71bbd);
+            
+
+            circle_2c8e0ae60da047cdb19fadb47d9ecf3f.bindPopup(popup_b5a257a8e1a64d159ed08737cbd7ee14)
+            ;
+
+            
+        
+    
+
+            var circle_a7cd5cda81c74d329ef74fda6b2cc619 = L.circle(
+                [40.75654766283489, -73.97794415373204],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_9b12ed2695a6433f907e4ca4c8f08fae = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_d38127adf5fa4393a219f8885c19be10 = $(`<div id="html_d38127adf5fa4393a219f8885c19be10" style="width: 100.0%; height: 100.0%;">Stop id 24, Time 143</div>`)[0];
+                popup_9b12ed2695a6433f907e4ca4c8f08fae.setContent(html_d38127adf5fa4393a219f8885c19be10);
+            
+
+            circle_a7cd5cda81c74d329ef74fda6b2cc619.bindPopup(popup_9b12ed2695a6433f907e4ca4c8f08fae)
+            ;
+
+            
+        
+    
+                var poly_line_277db7b548c74f59a5970c3d6fbb7b32 = L.polyline(
+                    [[40.75654766283489, -73.97794415373204], [40.76137852400832, -73.97162990425612]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_1f5b052d4d7e44149c4be217e56afa7d = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_f7b5f7623a024b3aa4949799b3c1692c = $(`<div id="html_f7b5f7623a024b3aa4949799b3c1692c" style="width: 100.0%; height: 100.0%;">Start Time 143, End Time 149, Travel Time 6.00 min</div>`)[0];
+                popup_1f5b052d4d7e44149c4be217e56afa7d.setContent(html_f7b5f7623a024b3aa4949799b3c1692c);
+            
+
+            poly_line_277db7b548c74f59a5970c3d6fbb7b32.bindPopup(popup_1f5b052d4d7e44149c4be217e56afa7d)
+            ;
+
+            
+        
+    
+
+            var circle_7d73841c6b4f4c87b6f86212f20657a0 = L.circle(
+                [40.75654766283489, -73.97794415373204],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_643c7398981c4e3aa1001b570bcfef11 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_8f2c5ff6d05248358cf779db97f0a4fa = $(`<div id="html_8f2c5ff6d05248358cf779db97f0a4fa" style="width: 100.0%; height: 100.0%;">Stop id 7, Time 143</div>`)[0];
+                popup_643c7398981c4e3aa1001b570bcfef11.setContent(html_8f2c5ff6d05248358cf779db97f0a4fa);
+            
+
+            circle_7d73841c6b4f4c87b6f86212f20657a0.bindPopup(popup_643c7398981c4e3aa1001b570bcfef11)
+            ;
+
+            
+        
+    
+
+            var circle_1ac334d2337f4aba9902f8c45561ff39 = L.circle(
+                [40.76137852400832, -73.97162990425612],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_0cfca3063f9a4c02838d7212dd0f7303 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_bccd000a749242709e99a28060d2c997 = $(`<div id="html_bccd000a749242709e99a28060d2c997" style="width: 100.0%; height: 100.0%;">Stop id 7, Time 149</div>`)[0];
+                popup_0cfca3063f9a4c02838d7212dd0f7303.setContent(html_bccd000a749242709e99a28060d2c997);
+            
+
+            circle_1ac334d2337f4aba9902f8c45561ff39.bindPopup(popup_0cfca3063f9a4c02838d7212dd0f7303)
+            ;
+
+            
+        
+    
+                var poly_line_8ed20d3d79954fb6b988602f54d19f42 = L.polyline(
+                    [[40.76137852400832, -73.97162990425612], [40.77554807249896, -73.9612828097628]],
+                    {
+  "bubblingMouseEvents": true,
+  "color": "#ff7f00",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "#ff7f00",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "noClip": false,
+  "opacity": 1.0,
+  "smoothFactor": 1.0,
+  "stroke": true,
+  "weight": 2
+}
+                    )
+                    .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_2003499db98f4b33b413688c72b9ca75 = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_5bcff205929642edb5ba6dd91723a3a8 = $(`<div id="html_5bcff205929642edb5ba6dd91723a3a8" style="width: 100.0%; height: 100.0%;">Start Time 149, End Time 159, Travel Time 10.00 min</div>`)[0];
+                popup_2003499db98f4b33b413688c72b9ca75.setContent(html_5bcff205929642edb5ba6dd91723a3a8);
+            
+
+            poly_line_8ed20d3d79954fb6b988602f54d19f42.bindPopup(popup_2003499db98f4b33b413688c72b9ca75)
+            ;
+
+            
+        
+    
+
+            var circle_53e36234815c45a9b9ea892f5052ce2a = L.circle(
+                [40.76137852400832, -73.97162990425612],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_c393895ed165452aa2121410816e87bb = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_219f104d3e394303bd1afe2aa8937b60 = $(`<div id="html_219f104d3e394303bd1afe2aa8937b60" style="width: 100.0%; height: 100.0%;">Stop id 27, Time 149</div>`)[0];
+                popup_c393895ed165452aa2121410816e87bb.setContent(html_219f104d3e394303bd1afe2aa8937b60);
+            
+
+            circle_53e36234815c45a9b9ea892f5052ce2a.bindPopup(popup_c393895ed165452aa2121410816e87bb)
+            ;
+
+            
+        
+    
+
+            var circle_e46702ebe3fa4a7490f331e425fcf676 = L.circle(
+                [40.77554807249896, -73.9612828097628],
+                {
+  "bubblingMouseEvents": true,
+  "color": "lightblue",
+  "dashArray": null,
+  "dashOffset": null,
+  "fill": true,
+  "fillColor": "lightblue",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "lineCap": "round",
+  "lineJoin": "round",
+  "opacity": 1.0,
+  "radius": 30,
+  "stroke": true,
+  "weight": 3
+}
+                )
+                .addTo(map_1a52a35fdea44c92b0177029ef25cd52);
+            
+    
+            var popup_99caf29696fe46d59ba20f26dadf931d = L.popup({maxWidth: '300'
+            
+            });
+
+            
+                var html_de7d8e69a92f42978ba3e905284818d5 = $(`<div id="html_de7d8e69a92f42978ba3e905284818d5" style="width: 100.0%; height: 100.0%;">Stop id 27, Time 159</div>`)[0];
+                popup_99caf29696fe46d59ba20f26dadf931d.setContent(html_de7d8e69a92f42978ba3e905284818d5);
+            
+
+            circle_e46702ebe3fa4a7490f331e425fcf676.bindPopup(popup_99caf29696fe46d59ba20f26dadf931d)
+            ;
+
+            
+        
+</script>

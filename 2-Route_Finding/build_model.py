@@ -178,7 +178,7 @@ class Optim(object):
         if O == 0 or D == 0:
             return 0
         else:
-            return self.data.stop_dist_mat[O, D] #* self._mu(O, D, t_o, t_d, p)
+            return self.data.stop_dist_mat[O, D] * self._mu(O, D, t_o, t_d, p)
 
 
 if __name__ == '__main__':

@@ -30,11 +30,11 @@ print('Clustering...')
 db = DBSCAN(eps_d=200, eps_t=13/1.66667e-11, min_samples=5, metric_d='l2', metric_t='l1').fit(all_coords, all_timestamps)
 print(list(zip(*np.unique(db.labels_, return_counts=True))))
 print('---------------------------------------------------')
-labels = filter_low_quality_cluster(db.labels_, thres=20)
+labels = filter_low_quality_cluster(db.labels_, thres=10)
 print(list(zip(*np.unique(labels, return_counts=True))))
 
 print('Visualizing clusters...')
-cluster_map_visz(all_coords, labels, show_noise=False, show_od=True, only_o=False, skip_critical=False)
+cluster_map_visz(all_coords, labels, show_noise=False, show_od=False, only_o=False, skip_critical=False)
 
 print('Computing statistics...')
 stats = calc_in_cluster_stats(labels, all_coords, all_timestamps, skip_critical=False)
